@@ -6,7 +6,7 @@ import 'package:hkflora/pages/loading.dart';
 void main() => runApp(MaterialApp(
   initialRoute: '/',
   routes: {
-    '/': (context) => Loading(), // '/' = base route
-    '/home': (context) => Home(),
+    '/': (context) => const Loading(), // '/' = base route
+    '/home': (context) => const Home(),
   },
 ));
