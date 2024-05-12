@@ -25,21 +25,25 @@ class FloraDatumPage extends StatelessWidget {
         children: <Widget>[
           Card(
             color: Colors.lightGreen.shade50,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10))),
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Column(
                 children: [
-                  const Row(
+                   Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         CircleAvatar(
-                          backgroundImage:
-                              AssetImage('assets/images/floradatumpage_card.png'),
+                          backgroundColor: Colors.lightGreen.shade50,
+                          backgroundImage: AssetImage(
+                              'assets/images/floradatumpage_card.png'),
                           radius: 20,
                         ),
                       ]),
-                      Container(height: 5,),
+                  Container(
+                    height: 5,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -77,12 +81,18 @@ class FloraDatumPage extends StatelessWidget {
           Container(height: 5),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 10, 10, 0),
-            child: Text(
-              'Ecological Information',
-              style: TextStyle(
-                  color: Colors.grey[700],
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold),
+            child: Row(
+              children: [
+                const ImageIcon(
+                    AssetImage('assets/images/floradatumpage_table.png')),
+                Text(
+                  ' Ecological Information',
+                  style: TextStyle(
+                      color: Colors.grey[700],
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
           ),
           Divider(color: Colors.lightGreen[900]),
@@ -108,13 +118,19 @@ class FloraDatumPage extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 10, 0),
-            child: Text(
-              'Conservation Status',
-              style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+            child: Row(
+              children: [
+                const ImageIcon(
+                    AssetImage('assets/images/floradatumpage_table.png')),
+                Text(
+                  ' Conservation Status',
+                  style: TextStyle(
+                    color: Colors.grey[700],
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
           ),
           Divider(color: Colors.lightGreen[900]),
@@ -170,13 +186,19 @@ class FloraDatumPage extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 10, 0),
-            child: Text(
-              'Flower & Fruit',
-              style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+            child: Row(
+              children: [
+                const ImageIcon(
+                    AssetImage('assets/images/floradatumpage_table.png')),
+                Text(
+                  ' Flower & Fruit',
+                  style: TextStyle(
+                    color: Colors.grey[700],
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
           ),
           Divider(color: Colors.lightGreen[900]),
@@ -215,12 +237,18 @@ class FloraDatumPage extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 10, 10, 0),
-            child: Text(
-              'Other',
-              style: TextStyle(
-                  color: Colors.grey[700],
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold),
+            child: Row(
+              children: [
+                const ImageIcon(
+                    AssetImage('assets/images/floradatumpage_table.png')),
+                Text(
+                  ' Other',
+                  style: TextStyle(
+                      color: Colors.grey[700],
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
           ),
           Divider(color: Colors.lightGreen[900]),
@@ -247,13 +275,19 @@ class FloraDatumPage extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 10, 0),
-            child: Text(
-              'Flora of Hong Kong',
-              style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+            child: Row(
+              children: [
+                const ImageIcon(
+                    AssetImage('assets/images/floradatumpage_table.png')),
+                Text(
+                  ' Flora of Hong Kong',
+                  style: TextStyle(
+                    color: Colors.grey[700],
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
           ),
           Divider(color: Colors.lightGreen[900]),
