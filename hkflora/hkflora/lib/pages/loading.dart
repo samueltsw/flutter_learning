@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hkflora/services/hkflora.dart';
+import 'package:hkflora/pages/home.dart';
 
 class Loading extends StatefulWidget {
   const Loading({super.key});
@@ -16,10 +17,16 @@ class _LoadingState extends State<Loading> {
 
     void readJsonData() async {
       Map<String, dynamic> jsonData = await loadJsonFromAssets('assets/PlantInfo_HKHerbarium.json');
-      var floradatalist = FloraDataList.fromJson(jsonData);
+      var floraDataList = FloraDataList.fromJson(jsonData);
 
       if (!context.mounted) return;
-      Navigator.pushReplacementNamed(context, '/home',arguments: floradatalist); // will not sit on the stack
+      //Navigator.pushReplacementNamed(context, '/home',arguments: floradatalist); // will not sit on the stack
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Home(floraDataList: floraDataList,),
+      ),
+      );  
     }
 
 

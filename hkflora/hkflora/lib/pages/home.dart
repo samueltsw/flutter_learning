@@ -1,60 +1,80 @@
 import 'package:flutter/material.dart';
 import 'package:hkflora/services/hkflora.dart';
+import 'package:hkflora/pages/floradatumpage.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  final FloraDataList floraDataList;
+  const Home({super.key, required this.floraDataList});
 
   @override
-  State<Home> createState() => _HomeState();
+  _HomeState createState() => _HomeState(floraDataList: floraDataList);
 }
 
 class _HomeState extends State<Home> {
+  FloraDataList floraDataList;
+  late FloraDataList allFloraDataList;
+
+  _HomeState({required this.floraDataList});
+
+  @override
+  void initState() {
+    floraDataList = widget.floraDataList;
+    allFloraDataList = widget.floraDataList;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-   var allFloraDataList =
-        ModalRoute.of(context)!.settings.arguments as FloraDataList;
-    var floraDataList = allFloraDataList;
-    //onSearch(String query) {
-     // FloraDataList suggestions = FloraDataList(
-      //    data: allFloraDataList.data
-      //        .where((floraData) => floraData.scientificName
-      //            .toLowerCase()
-      //            .contains(query.toLowerCase()))
-      //        .toList());
+    String removeLeadingZeros(String text) {
+      return text.replaceAll(RegExp('0+'), '');
+    }
 
-     // for (var data in suggestions.data) {
-     //   print(data.scientificName);
-     // }
+    onSearch(String query) {
+      FloraDataList suggestions = FloraDataList(
+          data: allFloraDataList.data
+              .where((floraData) =>
+                  floraData.scientificName
+                      .toLowerCase()
+                      .contains(query.toLowerCase()) ||
+                  floraData.familyName
+                      .toLowerCase()
+                      .contains(query.toLowerCase()) ||
+                  floraData.chineseFamilyName.contains(query) ||
+                  removeLeadingZeros(floraData.familyNo.toLowerCase())
+                      .contains(removeLeadingZeros(query.toLowerCase())) ||
+                  floraData.chineseName1 != null &&
+                      floraData.chineseName1.toString().contains(query) ||
+                  floraData.chineseName2 != null &&
+                      floraData.chineseName2.toString().contains(query) ||
+                  floraData.synonym1 != null &&
+                      floraData.synonym1
+                          .toString()
+                          .toLowerCase()
+                          .contains(query.toLowerCase()) ||
+                  floraData.synonym2 != null &&
+                      floraData.synonym2
+                          .toString()
+                          .toLowerCase()
+                          .contains(query.toLowerCase()))
+              .toList());
 
-    //  setState(() => floraDataList = suggestions);
-    //}
+      setState(() => floraDataList = suggestions);
+    }
 
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           elevation: 0,
           backgroundColor: Colors.grey[200],
           title: SizedBox(
             height: 38,
             child: TextField(
-              // onChanged: (value) => onSearch(value),
-              onChanged: (value) {
-                FloraDataList suggestions = FloraDataList(
-                    data: allFloraDataList.data
-                        .where((floraData) => floraData.scientificName
-                            .toLowerCase()
-                            .contains(value.toLowerCase()))
-                        .toList());
-
-                for (var data in suggestions.data) {
-                  debugPrint(data.scientificName);
-                }
-
-                setState(() {
-                  floraDataList = suggestions;
-                });
-              },
-
+              onChanged: (value) => onSearch(value),
+              style: const TextStyle(
+                fontSize: 15,
+                color: Colors.black,
+                // Add more styling properties as needed
+              ),
               decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.grey[200],
@@ -73,21 +93,42 @@ class _HomeState extends State<Home> {
         ),
         body: Container(
             padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-            child: ListView.builder(
-              padding: const EdgeInsets.all(8),
-              itemCount: floraDataList.data.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                    titleTextStyle:
-                        const TextStyle(fontSize: 13, color: Colors.black),
-                    subtitleTextStyle:
-                        TextStyle(fontSize: 11, color: Colors.grey.shade700),
-                    onTap: () {},
-                    title: Text(
-                        '${floraDataList.data[index].scientificName} (${floraDataList.data[index].chineseName1})'),
-                    subtitle: Text(
-                        '${floraDataList.data[index].familyNo} ${floraDataList.data[index].familyName} ${floraDataList.data[index].chineseFamilyName}'));
-              },
-            )));
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(15, 5, 5,
+                    5), // Adjust the padding values as per your requirement
+                child: Text(
+                  "${floraDataList.data.length} search result(s)",
+                  style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
+                  itemCount: floraDataList.data.length,
+                  itemBuilder: (context, index) {
+                    final floraDatum = floraDataList.data[index];
+                    return ListTile(
+                        titleTextStyle:
+                            const TextStyle(fontSize: 15, color: Colors.black),
+                        subtitleTextStyle: TextStyle(
+                            fontSize: 13, color: Colors.grey.shade700),
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    FloraDatumPage(floraDatum: floraDatum))),
+                        title: floraDatum.chineseName2 == null
+                            ? Text('${floraDatum.scientificName} (${floraDatum.chineseName1})')
+                            : floraDatum.chineseName1 == null ?
+                                Text(floraDatum.scientificName)
+                              : Text('${floraDatum.scientificName} (${floraDatum.chineseName1}、${floraDatum.chineseName2})'),
+                        subtitle: Text(
+                            '${floraDatum.familyNo} ${floraDatum.familyName} ${floraDatum.chineseFamilyName}'));
+                  },
+                ),
+              )
+            ])));
   }
 }
