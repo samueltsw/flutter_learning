@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
-import 'package:hkflora/models/hkflorafromonlinedata.dart';
+import 'package:hkflora/models/hkfloraonlinedata.dart';
 
 bool isNotMoreThanSixtyDaysAgo(DateTime? dateTime) {
   if (dateTime == null) {

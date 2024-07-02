@@ -3,7 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hkflora/models/hkflora.dart';
 import 'package:hkflora/pages/home.dart';
 import 'package:hkflora/services/downloadhkherbariumdata.dart';
-import 'package:hkflora/models/hkflorafromonlinedata.dart';
+import 'package:hkflora/models/hkfloraonlinedata.dart';
 
 class Loading extends StatefulWidget {
   const Loading({super.key});
