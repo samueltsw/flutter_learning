@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hkflora/services/hkflora.dart';
+import 'package:hkflora/models/hkflora.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class FloraDatumPage extends StatelessWidget {
@@ -14,7 +14,7 @@ class FloraDatumPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           title: Text(
-        'Plant Infomration',
+        'Plant Information',
         style: const TextStyle(
           fontSize: 20,
           color: Colors.black,
@@ -31,7 +31,7 @@ class FloraDatumPage extends StatelessWidget {
               padding: const EdgeInsets.all(15.0),
               child: Column(
                 children: [
-                   Row(
+                  Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         CircleAvatar(
@@ -47,21 +47,34 @@ class FloraDatumPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text('${floraDatum.scientificName} ',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontStyle: FontStyle.italic,
-                          )),
-                      Text(
-                          (floraDatum.chineseName1 != null &&
-                                  floraDatum.chineseName2 != null)
-                              ? '${floraDatum.chineseName1}、${floraDatum.chineseName2}'
-                              : (floraDatum.chineseName1 != null)
-                                  ? '${floraDatum.chineseName1}'
-                                  : "",
-                          style: const TextStyle(
-                            fontSize: 18,
-                          )),
+                      Flexible(
+                        child: RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: '${floraDatum.scientificName} ',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.black
+                                ),
+                              ),
+                              TextSpan(
+                                  text: (floraDatum.chineseName1 != null &&
+                                          floraDatum.chineseName2 != null)
+                                      ? '${floraDatum.chineseName1}、${floraDatum.chineseName2}'
+                                      : (floraDatum.chineseName1 != null)
+                                          ? '${floraDatum.chineseName1}'
+                                          : "",
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.black
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   Row(
@@ -70,7 +83,7 @@ class FloraDatumPage extends StatelessWidget {
                       Text(
                           '${floraDatum.familyNo} ${floraDatum.familyName} ${floraDatum.chineseFamilyName}',
                           style: const TextStyle(
-                            fontSize: 16,
+                            fontSize: 18,
                           )),
                     ],
                   ),
@@ -89,7 +102,7 @@ class FloraDatumPage extends StatelessWidget {
                   ' Ecological Information',
                   style: TextStyle(
                       color: Colors.grey[700],
-                      fontSize: 16,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold),
                 ),
               ],
@@ -107,10 +120,10 @@ class FloraDatumPage extends StatelessWidget {
                 TableRow(
                   children: [
                     TableCell(
-                        child: Text('Native', style: TextStyle(fontSize: 15))),
+                        child: Text('Native', style: TextStyle(fontSize: 17))),
                     TableCell(
                         child: Text(floraDatum.nativeToHk,
-                            style: TextStyle(fontSize: 15))),
+                            style: TextStyle(fontSize: 17))),
                   ],
                 ),
               ],
@@ -126,7 +139,7 @@ class FloraDatumPage extends StatelessWidget {
                   ' Conservation Status',
                   style: TextStyle(
                     color: Colors.grey[700],
-                    fontSize: 16,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -145,40 +158,40 @@ class FloraDatumPage extends StatelessWidget {
                 TableRow(
                   children: [
                     TableCell(
-                        child: Text('Cap. 96', style: TextStyle(fontSize: 15))),
+                        child: Text('Cap. 96', style: TextStyle(fontSize: 17))),
                     TableCell(
                         child: Text(floraDatum.cap96,
-                            style: TextStyle(fontSize: 15))),
+                            style: TextStyle(fontSize: 17))),
                   ],
                 ),
                 TableRow(
                   children: [
                     TableCell(
                         child:
-                            Text('Cap. 586', style: TextStyle(fontSize: 15))),
+                            Text('Cap. 586', style: TextStyle(fontSize: 17))),
                     TableCell(
                         child: Text(floraDatum.cap586,
-                            style: TextStyle(fontSize: 15))),
+                            style: TextStyle(fontSize: 17))),
                   ],
                 ),
                 TableRow(
                   children: [
                     TableCell(
                         child: Text('Rare and Precious Plants of Hong Kong',
-                            style: TextStyle(fontSize: 15))),
+                            style: TextStyle(fontSize: 17))),
                     TableCell(
                         child: Text(floraDatum.rareAndPreciousPlantsOfHk ?? "",
-                            style: TextStyle(fontSize: 15))),
+                            style: TextStyle(fontSize: 17))),
                   ],
                 ),
                 TableRow(
                   children: [
                     TableCell(
                         child: Text('Plant Red Data Book',
-                            style: TextStyle(fontSize: 15))),
+                            style: TextStyle(fontSize: 17))),
                     TableCell(
                         child: Text(floraDatum.chinaPlantRedDataBook ?? "",
-                            style: TextStyle(fontSize: 15))),
+                            style: TextStyle(fontSize: 17))),
                   ],
                 ),
               ],
@@ -194,7 +207,7 @@ class FloraDatumPage extends StatelessWidget {
                   ' Flower & Fruit',
                   style: TextStyle(
                     color: Colors.grey[700],
-                    fontSize: 16,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -214,22 +227,22 @@ class FloraDatumPage extends StatelessWidget {
                   children: [
                     TableCell(
                         child: Text('Flowering Period',
-                            style: TextStyle(fontSize: 15))),
+                            style: TextStyle(fontSize: 17))),
                     TableCell(
                         child: Text(
                             '${floraDatum.flowerFromValue.toString()} - ${floraDatum.flowerToValue.toString()}',
-                            style: TextStyle(fontSize: 15))),
+                            style: TextStyle(fontSize: 17))),
                   ],
                 ),
                 TableRow(
                   children: [
                     TableCell(
                         child: Text('Fruiting Period',
-                            style: TextStyle(fontSize: 15))),
+                            style: TextStyle(fontSize: 17))),
                     TableCell(
                         child: Text(
                             '${floraDatum.fruitFromValue.toString()} - ${floraDatum.fruitToValue.toString()}',
-                            style: TextStyle(fontSize: 15))),
+                            style: TextStyle(fontSize: 17))),
                   ],
                 ),
               ],
@@ -245,7 +258,7 @@ class FloraDatumPage extends StatelessWidget {
                   ' Other',
                   style: TextStyle(
                       color: Colors.grey[700],
-                      fontSize: 16,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold),
                 ),
               ],
@@ -264,10 +277,10 @@ class FloraDatumPage extends StatelessWidget {
                   children: [
                     TableCell(
                         child: Text('Type Specimen Collected in Hong Kong',
-                            style: TextStyle(fontSize: 15))),
+                            style: TextStyle(fontSize: 17))),
                     TableCell(
                         child: Text(floraDatum.typeSpecimenCollectedInHk,
-                            style: TextStyle(fontSize: 15))),
+                            style: TextStyle(fontSize: 17))),
                   ],
                 ),
               ],
@@ -283,7 +296,7 @@ class FloraDatumPage extends StatelessWidget {
                   ' Flora of Hong Kong',
                   style: TextStyle(
                     color: Colors.grey[700],
-                    fontSize: 16,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -292,8 +305,14 @@ class FloraDatumPage extends StatelessWidget {
           ),
           Divider(color: Colors.lightGreen[900]),
           Padding(
-            padding: const EdgeInsets.fromLTRB(30, 0, 10, 10),
-            child: HtmlWidget("${floraDatum.floraOfHKContent}"),
+            padding: const EdgeInsets.fromLTRB(30, 0, 30, 10),
+            child: HtmlWidget(
+              "${floraDatum.floraOfHKContent}",
+              textStyle: TextStyle(
+                fontSize:17,
+                ),
+              
+              ),
           ),
         ],
       ),
