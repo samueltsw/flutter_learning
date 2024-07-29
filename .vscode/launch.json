@@ -1,0 +1,108 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "myapp",
+            "cwd": "flutter_learning\\myapp",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "myapp (profile mode)",
+            "cwd": "flutter_learning\\myapp",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "myapp (release mode)",
+            "cwd": "flutter_learning\\myapp",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "ninja_id",
+            "cwd": "flutter_learning\\ninja_id",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "ninja_id (profile mode)",
+            "cwd": "flutter_learning\\ninja_id",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "ninja_id (release mode)",
+            "cwd": "flutter_learning\\ninja_id",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "hkflora",
+            "cwd": "flutter_learning\\hkflora\\hkflora",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "hkflora (profile mode)",
+            "cwd": "flutter_learning\\hkflora\\hkflora",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "hkflora (release mode)",
+            "cwd": "flutter_learning\\hkflora\\hkflora",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "test_1",
+            "cwd": "flutter_learning\\test\\test_1",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "test_1 (profile mode)",
+            "cwd": "flutter_learning\\test\\test_1",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "test_1 (release mode)",
+            "cwd": "flutter_learning\\test\\test_1",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "world_time",
+            "cwd": "flutter_learning\\word_time\\world_time",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "world_time (profile mode)",
+            "cwd": "flutter_learning\\word_time\\world_time",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "world_time (release mode)",
+            "cwd": "flutter_learning\\word_time\\world_time",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
