@@ -11,6 +11,9 @@ class OnlineFloraData {
     this.chineseName1,
     this.chineseName2,
     this.chineseName3,
+    this.commonName1,
+    this.commonName2,
+    this.commonName3,
     this.synonym1,
     this.synonym2,
     required this.nativeToHk,
@@ -38,6 +41,9 @@ class OnlineFloraData {
   final String? chineseName1;
   final String? chineseName2;
   final String? chineseName3;
+  final String? commonName1;
+  final String? commonName2;
+  final String? commonName3;
   final String? synonym1;
   final String? synonym2;
   final String nativeToHk;
@@ -65,6 +71,9 @@ class OnlineFloraData {
         final chineseName1 = data['chineseName1'];
         final chineseName2 = data['chineseName2'];
         final chineseName3 = data['chineseName3'];
+        final commonName1 = data['commonName1'];
+        final commonName2 = data['commonName2'];
+        final commonName3 = data['commonName3'];
         final synonym1 = data['synonym1'];
         final synonym2 = data['synonym2'];
         final nativeToHk = data['nativeToHk'];
@@ -92,6 +101,9 @@ class OnlineFloraData {
         chineseName1: chineseName1,
         chineseName2: chineseName2,
         chineseName3: chineseName3,
+        commonName1: commonName1,
+        commonName2: commonName2,
+        commonName3: commonName3,
         synonym1: synonym1,
         synonym2: synonym2,
         nativeToHk: nativeToHk,
@@ -124,6 +136,12 @@ class OnlineFloraData {
         (data['chinese_name'].length > 1)? data['chinese_name'][1] : null;
     final chineseName3 = 
         (data['chinese_name'].length > 2)? data['chinese_name'][2] : null;
+    final commonName1 = 
+      (data['common_name'].length > 0)? data['common_name'][0] : null;
+    final commonName2 = 
+        (data['common_name'].length > 1)? data['common_name'][1] : null;
+    final commonName3 = 
+        (data['common_name'].length > 2)? data['common_name'][2] : null;
     final synonym1 = 
       (data['scientific_name'].length > 2)? data['scientific_name'][1] : null;
     final synonym2 = 
@@ -148,7 +166,7 @@ class OnlineFloraData {
     final floraOfHKContent = 
         (floradata['eng'].isNotEmpty) ? floradata['eng'][0]['content'] : null;
 
-    return OnlineFloraData(
+      return OnlineFloraData(
         speciesId: speciesId,
         familyId: familyId,
         familyNo: familyNo,
@@ -159,6 +177,9 @@ class OnlineFloraData {
         chineseName1: chineseName1,
         chineseName2: chineseName2,
         chineseName3: chineseName3,
+        commonName1: commonName1,
+        commonName2: commonName2,
+        commonName3: commonName3,
         synonym1: synonym1,
         synonym2: synonym2,
         nativeToHk: nativeToHk,
@@ -187,6 +208,9 @@ class OnlineFloraData {
         'chineseName1': chineseName1,
         'chineseName2': chineseName2,
         'chineseName3': chineseName3,
+        'commonName1': commonName1,
+        'commonName2': commonName2,
+        'commonName3': commonName3,
         'synonym1': synonym1,
         'synonym2': synonym2,
         'nativeToHk': nativeToHk,

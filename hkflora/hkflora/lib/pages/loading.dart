@@ -15,7 +15,7 @@ class Loading extends StatefulWidget {
 class _LoadingState extends State<Loading> {
   String time = 'loading';
 
-  void readJsonData() async {
+/*   void readJsonData() async {
     Map<String, dynamic> jsonData =
         await loadJsonFromAssets('assets/PlantInfo_HKHerbarium_20240614.json');
     var floraDataList = FloraDataList.fromJson(jsonData);
@@ -30,15 +30,9 @@ class _LoadingState extends State<Loading> {
         ),
       ),
     );
-  }
-
-   void readDownloadedJsonData() async {
-    List<OnlineFloraData> onlineFloraDataList = await readJsonFile('floraData_HKHerbarium.json');
-    print('complete reading downloaded json data');
-  }
-  
+  } */
  
-  void downloadHerbariumData() async {
+  Future<void> downloadHerbariumData() async {
     if (!await jsonFileExist('floraData_HKHerbarium.json') ||
         !isNotMoreThanSixtyDaysAgo(
             await getLastEditDate('floraData_HKHerbarium.json'))) {
@@ -59,6 +53,20 @@ class _LoadingState extends State<Loading> {
       }
     }
   }
+  
+   Future<void> readDownloadedJsonData() async {
+    List<OnlineFloraData> onlineFloraDataList = await readJsonFile('floraData_HKHerbarium.json');
+    if (!context.mounted) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Home(
+          floraDataList: onlineFloraDataList,
+        ),
+      ),
+    );
+  }
+  
 
   @override
   void initState() {

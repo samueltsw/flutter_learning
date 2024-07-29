@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hkflora/models/hkflora.dart';
+//import 'package:hkflora/models/hkflora.dart';
+import 'package:hkflora/models/hkfloraonlinedata.dart';
 import 'package:hkflora/pages/floradatumpage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class Home extends StatefulWidget {
-  final FloraDataList floraDataList;
+  final  List<OnlineFloraData> floraDataList;
   const Home({super.key, required this.floraDataList});
 
   @override
@@ -13,8 +14,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  FloraDataList floraDataList;
-  late FloraDataList allFloraDataList;
+   List<OnlineFloraData> floraDataList;
+  late  List<OnlineFloraData> allFloraDataList;
   DateTime timeBackPressed = DateTime.now();
   final TextEditingController _controller = new TextEditingController();
 
@@ -46,8 +47,7 @@ class _HomeState extends State<Home> {
     }
 
    void  onSearch(String query) {
-      FloraDataList suggestions = FloraDataList(
-          data: allFloraDataList.data
+       List<OnlineFloraData> suggestions = allFloraDataList
               .where((floraData) =>
                   floraData.scientificName
                       .toLowerCase()
@@ -72,7 +72,7 @@ class _HomeState extends State<Home> {
                           .toString()
                           .toLowerCase()
                           .contains(query.toLowerCase()))
-              .toList());
+              .toList();
 
       setState(() => floraDataList = suggestions);
     }
@@ -153,16 +153,16 @@ class _HomeState extends State<Home> {
                   padding: EdgeInsets.fromLTRB(15, 5, 5,
                       5), // Adjust the padding values as per your requirement
                   child: Text(
-                    "${floraDataList.data.length} search result(s)",
+                    "${floraDataList.length} search result(s)",
                     style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
                   ),
                 ),
                 Expanded(
                   child: ListView.builder(
                     padding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
-                    itemCount: floraDataList.data.length,
+                    itemCount: floraDataList.length,
                     itemBuilder: (context, index) {
-                      final floraDatum = floraDataList.data[index];
+                      final floraDatum = floraDataList[index];
                       return ListTile(
                           titleTextStyle:
                               const TextStyle(fontSize: 17, color: Colors.black),

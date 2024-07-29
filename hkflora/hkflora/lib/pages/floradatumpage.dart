@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hkflora/models/hkflora.dart';
+// import 'package:hkflora/models/hkflora.dart';
+import 'package:hkflora/models/hkfloraonlinedata.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class FloraDatumPage extends StatelessWidget {
-  final FloraData floraDatum;
+  final OnlineFloraData floraDatum;
   const FloraDatumPage({
     super.key,
     required this.floraDatum,
@@ -55,22 +56,23 @@ class FloraDatumPage extends StatelessWidget {
                               TextSpan(
                                 text: '${floraDatum.scientificName} ',
                                 style: const TextStyle(
-                                  fontSize: 20,
-                                  fontStyle: FontStyle.italic,
-                                  color: Colors.black
-                                ),
+                                    fontSize: 20,
+                                    fontStyle: FontStyle.italic,
+                                    color: Colors.black),
                               ),
                               TextSpan(
                                   text: (floraDatum.chineseName1 != null &&
-                                          floraDatum.chineseName2 != null)
-                                      ? '${floraDatum.chineseName1}、${floraDatum.chineseName2}'
-                                      : (floraDatum.chineseName1 != null)
-                                          ? '${floraDatum.chineseName1}'
-                                          : "",
+                                          floraDatum.chineseName2 != null &&
+                                          floraDatum.chineseName3 != null)
+                                      ? '${floraDatum.chineseName1}、${floraDatum.chineseName2}、${floraDatum.chineseName3}'
+                                      : (floraDatum.chineseName1 != null &&
+                                              floraDatum.chineseName2 != null)
+                                          ? '${floraDatum.chineseName1}、${floraDatum.chineseName2}'
+                                          : (floraDatum.chineseName1 != null)
+                                              ? '${floraDatum.chineseName1}'
+                                              : "",
                                   style: const TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.black
-                                  )),
+                                      fontSize: 20, color: Colors.black)),
                             ],
                           ),
                         ),
@@ -92,6 +94,78 @@ class FloraDatumPage extends StatelessWidget {
             ),
           ),
           Container(height: 5),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 10, 10, 0),
+            child: Row(
+              children: [
+                const ImageIcon(
+                    AssetImage('assets/images/floradatumpage_table.png')),
+                Text(
+                  ' Basic Information',
+                  style: TextStyle(
+                      color: Colors.grey[700],
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          Divider(color: Colors.lightGreen[900]),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(30, 0, 10, 20),
+            child: Table(
+              columnWidths: const <int, TableColumnWidth>{
+                0: FlexColumnWidth(1.1),
+                1: FlexColumnWidth(0.1),
+                2: FlexColumnWidth(2),
+              },
+              children: [
+                TableRow(
+                  children: [
+                    TableCell(
+                        child: Text('Common Name',
+                            style: TextStyle(fontSize: 17))),
+                    TableCell(
+                        child: Text(
+                      '',
+                    )),
+                    TableCell(
+                        child: Text(
+                            (floraDatum.commonName1 != null &&
+                                    floraDatum.commonName2 != null &&
+                                    floraDatum.commonName3 != null)
+                                ? '${floraDatum.commonName1}, ${floraDatum.commonName2}, ${floraDatum.commonName3}'
+                                : (floraDatum.commonName1 != null &&
+                                        floraDatum.commonName2 != null)
+                                    ? '${floraDatum.commonName1}, ${floraDatum.commonName2}'
+                                    : (floraDatum.commonName1 != null)
+                                        ? '${floraDatum.commonName1}'
+                                        : "",
+                            style: TextStyle(fontSize: 17))),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    TableCell(
+                        child: Text('Synonym', style: TextStyle(fontSize: 17))),
+                    TableCell(
+                        child: Text(
+                      '',
+                    )),
+                    TableCell(
+                        child: Text(
+                            (floraDatum.synonym1 != null &&
+                                    floraDatum.synonym2 != null)
+                                ? '${floraDatum.synonym1}, ${floraDatum.synonym2}'
+                                : (floraDatum.synonym1 != null)
+                                    ? '${floraDatum.synonym1}'
+                                    : "",
+                            style: TextStyle(fontSize: 17))),
+                  ],
+                ),
+              ],
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 10, 10, 0),
             child: Row(
@@ -278,6 +352,7 @@ class FloraDatumPage extends StatelessWidget {
                     TableCell(
                         child: Text('Type Specimen Collected in Hong Kong',
                             style: TextStyle(fontSize: 17))),
+                    TableCell(child: Text('', style: TextStyle(fontSize: 17))),
                     TableCell(
                         child: Text(floraDatum.typeSpecimenCollectedInHk,
                             style: TextStyle(fontSize: 17))),
@@ -309,10 +384,9 @@ class FloraDatumPage extends StatelessWidget {
             child: HtmlWidget(
               "${floraDatum.floraOfHKContent}",
               textStyle: TextStyle(
-                fontSize:17,
-                ),
-              
+                fontSize: 17,
               ),
+            ),
           ),
         ],
       ),
