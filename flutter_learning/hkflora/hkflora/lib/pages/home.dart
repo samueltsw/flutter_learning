@@ -223,7 +223,11 @@ class _HomeState extends State<Home> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        PlantDataPage(taxonomicUnit: item),
+                                        PlantDataPage(
+                                          taxonomicUnit: item,
+                                          genusDataList: widget.genusDataList,
+                                          speciesDataList: widget.speciesDataList,
+                                          ),
                                   ),
                                 );
                               },
@@ -242,7 +246,11 @@ class _HomeState extends State<Home> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        PlantDataPage(taxonomicUnit: item),
+                                        PlantDataPage(
+                                          taxonomicUnit: item,
+                                          genusDataList: widget.genusDataList,
+                                          speciesDataList: widget.speciesDataList,
+                                          ),
                                   ),
                                 );
                               },
@@ -260,7 +268,11 @@ class _HomeState extends State<Home> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        PlantDataPage(taxonomicUnit: item),
+                                        PlantDataPage(
+                                          taxonomicUnit: item,
+                                          genusDataList: widget.genusDataList,
+                                          speciesDataList: widget.speciesDataList,
+                                          ),
                                   ),
                                 );
                               },

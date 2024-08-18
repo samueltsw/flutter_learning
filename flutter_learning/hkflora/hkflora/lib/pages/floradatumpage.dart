@@ -7,13 +7,18 @@ import 'package:hkflora/models/FullFloraData.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:hkflora/theme.dart';
+import 'package:flutter/rendering.dart';
 
 class PlantDataPage extends StatelessWidget {
   final TaxonomicUnit taxonomicUnit;
+  final List<GenusData> genusDataList;
+  final List<SpeciesData> speciesDataList;
 
   const PlantDataPage({
     Key? key,
     required this.taxonomicUnit,
+    required this.genusDataList,
+    required this.speciesDataList,
   }) : super(key: key);
 
   @override
@@ -39,7 +44,7 @@ class PlantDataPage extends StatelessWidget {
               _buildHeader(),
               _buildExternalLinks(),
               _buildInfoSections(),
-              _buildFloraOfHongKongSection(),
+              _buildFloraOfHongKongSection(context),
             ],
           ),
         ),
@@ -74,10 +79,10 @@ class PlantDataPage extends StatelessWidget {
               _getMainTitle(),
               style: const TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
             ),
-              Text(
-                _getChineseNames(),
-                style: const TextStyle(fontSize: 20),
-              ),
+            Text(
+              _getChineseNames(),
+              style: const TextStyle(fontSize: 20),
+            ),
             Text(
               _getSubtitle(),
               style: const TextStyle(fontSize: 18),
@@ -99,17 +104,21 @@ class PlantDataPage extends StatelessWidget {
   }
 
   String _getChineseNames() {
-    if (taxonomicUnit.data is SpeciesData){
+    if (taxonomicUnit.data is SpeciesData) {
       final species = taxonomicUnit.data as SpeciesData;
       return [species.chineseName1, species.chineseName2, species.chineseName3]
-        .where((name) => name != null && name.isNotEmpty)
-        .join('、');
+          .where((name) => name != null && name.isNotEmpty)
+          .join('、');
     }
-    if (taxonomicUnit.data is GenusData){
-      return [(taxonomicUnit.data as GenusData).genusChineseName].where((name) => name != null && name.isNotEmpty).join('');
+    if (taxonomicUnit.data is GenusData) {
+      return [(taxonomicUnit.data as GenusData).genusChineseName]
+          .where((name) => name != null && name.isNotEmpty)
+          .join('');
     }
-    if (taxonomicUnit.data is FamilyData){
-      return [(taxonomicUnit.data as FamilyData).chineseFamilyName].where((name) => name.isNotEmpty).join('');
+    if (taxonomicUnit.data is FamilyData) {
+      return [(taxonomicUnit.data as FamilyData).chineseFamilyName]
+          .where((name) => name.isNotEmpty)
+          .join('');
     }
     return '';
   }
@@ -145,8 +154,8 @@ class PlantDataPage extends StatelessWidget {
       }
     }
 
-    String getHKHLink(){
-            switch (taxonomicUnit.type) {
+    String getHKHLink() {
+      switch (taxonomicUnit.type) {
         case 'family':
           return 'family&oID=${(taxonomicUnit.data as FamilyData).familyId}';
         case 'genus':
@@ -178,18 +187,18 @@ class PlantDataPage extends StatelessWidget {
         url:
             'https://www.herbarium.gov.hk/en/hk-plant-database/plant-detail/index.html?pType=${getHKHLink()}',
       ),
-      const SizedBox(width: 5),  // Spacing between buttons
+      const SizedBox(width: 5), // Spacing between buttons
       _buildResourceButton(
         label: 'HKCWW',
         url:
             'https://hkcww.org/hkplant/readdb_photo_v7.php?f1=${getKeyword()}&f2=any&f2b=apg&f3=any&f4=any&f5=any&f6=any&f7=any&f8=any&f8a=any&f8b=any&f9=any&f10=any&f11=any',
       ),
-      const SizedBox(width: 5),  // Spacing between buttons
+      const SizedBox(width: 5), // Spacing between buttons
       _buildResourceButton(
         label: 'iPlant.cn',
         url: 'https://www.iplant.cn/info/${getKeyword()}?t=z',
       ),
-      const SizedBox(width: 5),  // Spacing between buttons
+      const SizedBox(width: 5), // Spacing between buttons
       _buildResourceButton(
         label: 'POWO',
         url: 'https://powo.science.kew.org/results?q=${getKeyword()}',
@@ -199,9 +208,8 @@ class PlantDataPage extends StatelessWidget {
     return Padding(
         padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: buttons
-        ));
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: buttons));
   }
 
   Widget _buildInfoSections() {
@@ -339,15 +347,16 @@ class PlantDataPage extends StatelessWidget {
     ].whereType<TableRow>().toList();
   }
 
-
-
-Widget _buildFloraOfHongKongSection() {
+  Widget _buildFloraOfHongKongSection(BuildContext context) {
     FullFlora? _getFloraOfHK() {
-    if (taxonomicUnit.data is SpeciesData) return (taxonomicUnit.data as SpeciesData).floraOfHKContent;
-    if (taxonomicUnit.data is GenusData) return (taxonomicUnit.data as GenusData).floraOfHKContent;
-    if (taxonomicUnit.data is FamilyData) return (taxonomicUnit.data as FamilyData).floraOfHKContent;
-    return null;
-  }
+      if (taxonomicUnit.data is SpeciesData)
+        return (taxonomicUnit.data as SpeciesData).floraOfHKContent;
+      if (taxonomicUnit.data is GenusData)
+        return (taxonomicUnit.data as GenusData).floraOfHKContent;
+      if (taxonomicUnit.data is FamilyData)
+        return (taxonomicUnit.data as FamilyData).floraOfHKContent;
+      return null;
+    }
 
     final floraData = _getFloraOfHK();
     if (floraData != null) {
@@ -357,7 +366,8 @@ Widget _buildFloraOfHongKongSection() {
             padding: const EdgeInsets.fromLTRB(20, 0, 10, 0),
             child: Row(
               children: [
-                const ImageIcon(AssetImage('assets/images/floradatumpage_table.png')),
+                const ImageIcon(
+                    AssetImage('assets/images/floradatumpage_table.png')),
                 Text(
                   ' Flora of Hong Kong',
                   style: TextStyle(
@@ -372,16 +382,15 @@ Widget _buildFloraOfHongKongSection() {
           Divider(color: Colors.lightGreen[900]),
           Padding(
             padding: const EdgeInsets.fromLTRB(30, 0, 30, 10),
-            child: _buildFullFloraContent(floraData),
+            child: _buildFullFloraContent(floraData, context),
           ),
         ],
       );
     }
     return Container();
   }
-}
 
-Widget _buildFullFloraContent(FullFlora fullFlora) {
+  Widget _buildFullFloraContent(FullFlora fullFlora, BuildContext context) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: fullFlora.engItems.map((item) {
@@ -394,7 +403,7 @@ Widget _buildFullFloraContent(FullFlora fullFlora) {
           ),
         );
       } else if (item.type == 'table') {
-        return _buildFloraTable(item);
+        return _buildFloraTable(item, context); // Pass the context here
       } else {
         return Container(); // Handle other types if needed
       }
@@ -402,126 +411,216 @@ Widget _buildFullFloraContent(FullFlora fullFlora) {
   );
 }
 
-Widget _buildFloraTable(FloraItem item) {
+Widget _buildFloraTable(FloraItem item, BuildContext context) {
   if (item.table == null || item.table!.isEmpty) {
     return Container();
   }
+  final ScrollController scrollController = ScrollController();
+
   return Padding(
     padding: const EdgeInsets.only(bottom: 10),
-    child: Table(
-      columnWidths: const {
-        0: FlexColumnWidth(0.7),
-        1: FlexColumnWidth(3),
-        2: FlexColumnWidth(1),
-      },
-      children: item.table!.map((tableItem) {
-        // Extract the part after the last underscore        
-        return TableRow(
-          children: [
-            // Column 1: Index part
-            TableCell(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: HtmlWidget(
-                  tableItem.index,
-                  textStyle: const TextStyle(fontSize: 17),
+    child: SingleChildScrollView(
+      controller: scrollController,
+      child: Table(
+        columnWidths: const {
+          0: FlexColumnWidth(0.7),
+          1: FlexColumnWidth(3),
+          2: FlexColumnWidth(1),
+        },
+        children: item.table!.asMap().entries.map((entry) {
+          final int index = entry.key;
+          final TableItem tableItem = entry.value;
+
+          // Extract the part after the last underscore
+          return TableRow(
+            children: [
+              // Column 1: Index part
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: HtmlWidget(
+                    tableItem.index,
+                    textStyle: const TextStyle(fontSize: 17),
+                  ),
                 ),
               ),
-            ),
-            // Column 2: Content (HTML)
-            TableCell(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: HtmlWidget(
-                  tableItem.content,
-                  textStyle: const TextStyle(fontSize: 17),
+              // Column 2: Content (HTML)
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: HtmlWidget(
+                    tableItem.content,
+                    textStyle: const TextStyle(fontSize: 17),
+                  ),
                 ),
               ),
-            ),
-            // Column 3: Reference value
-            TableCell(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  tableItem.reference?.refValue.split('_').last ?? '',
-                  style: const TextStyle(fontSize: 17),
+              // Column 3: Reference value
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      if (tableItem.reference != null) {
+                        switch (tableItem.reference!.refType) {
+                          case 'genus':
+                            _navigateToFloraDataPage(
+                                context, tableItem.reference!);
+                            break;
+
+                          case 'species':
+                            _navigateToFloraDataPage(
+                                context, tableItem.reference!);
+                            break;
+                          case 'item':
+                            _scrollToItem(scrollController, tableItem.index);
+                            break;
+                        }
+                      }
+                    },
+                    child: Text(
+                      tableItem.reference?.refValue.split('_').last ?? '',
+                      style: const TextStyle(
+                        fontSize: 17,
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ],
-        );
-      }).toList(),
+            ],
+          );
+        }).toList(),
+      ),
     ),
   );
 }
 
-
-  void _navigateToDetailPage(BuildContext context, FloraItem item) {
-    // Implement navigation to detail page based on the item type
-    // You may need to fetch more data or use a different page based on whether it's a species, genus, or family
+void _navigateToFloraDataPage(BuildContext context, Reference reference) {
+  // Implement navigation to the relevant FloraDataPage
+  // You'll need to create the appropriate TaxonomicUnit based on the reference type and ID
+  TaxonomicUnit item;
+  if (reference.refType == 'genus') {
+     item = TaxonomicUnit(
+        'genus', 
+        genusDataList.firstWhere((e) => e.genusId == int.parse(reference.refValue)));
+  } else {
+     item =  TaxonomicUnit(
+        'species',
+        speciesDataList.firstWhere((e) => e.speciesId == int.parse(reference.refValue)));
   }
 
-  Widget _buildTwoColumnSection(
-      {required String title,
-      required String iconImage,
-      required List<TableRow> children}) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 10, 10, 0),
-          child: Row(
-            children: [
-              ImageIcon(AssetImage(iconImage)),
-              Text(
-                ' $title',
-                style: TextStyle(
-                  color: Colors.grey[700],
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Divider(color: Colors.lightGreen[900]),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(30, 0, 10, 20),
-          child: Table(
-            columnWidths: const <int, TableColumnWidth>{
-              0: FlexColumnWidth(2),
-              1: FlexColumnWidth(1),
-            },
-            children: children,
-          ),
-        ),
-      ],
-    );
-  }
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => PlantDataPage(
+        taxonomicUnit: item,
+        genusDataList: genusDataList,
+        speciesDataList: speciesDataList,
+      ),
+    ),
+  );
+}
 
-  TableRow? _buildTableRow(
-      {required String label, required List<String?> value}) {
-    final filteredValue =
-        value.where((v) => v != null && v.isNotEmpty).toList();
-    if (filteredValue.isEmpty) {
-      return null; // Omit the table row if all values are empty
+void _scrollToItem(ScrollController controller, String targetIndex) {
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    final context = controller.position.context.notificationContext;
+    if (context == null) return;
+
+    final RenderBox? tableBox = context.findRenderObject() as RenderBox?;
+    if (tableBox == null) return;
+
+    final RenderAbstractViewport viewport = RenderAbstractViewport.of(tableBox);
+    if (viewport == null) return;
+
+    final List<TableRow> tableRows = (context.widget as Table).children;
+    
+    for (int i = 0; i < tableRows.length; i++) {
+      final TableRow row = tableRows[i];
+      final TableCell firstCell = row.children.first as TableCell;
+      final String cellText = (firstCell.child as Text).data ?? '';
+      
+      if (cellText == targetIndex) {
+        final RenderObject? rowRenderObject = context.findRenderObject();
+        if (rowRenderObject != null) {
+          final RenderAbstractViewport viewport = RenderAbstractViewport.of(rowRenderObject)!;
+          final RevealedOffset targetOffset = viewport.getOffsetToReveal(rowRenderObject, 0.0);
+          
+          controller.animateTo(
+            targetOffset.offset,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        }
+        break;
+      }
     }
-    return TableRow(
-      children: [
-        TableCell(
-          child: Text(label, style: const TextStyle(fontSize: 17)),
+  });
+}
+
+Widget _buildTwoColumnSection(
+    {required String title,
+    required String iconImage,
+    required List<TableRow> children}) {
+  return Column(
+    children: [
+      Padding(
+        padding: const EdgeInsets.fromLTRB(20, 10, 10, 0),
+        child: Row(
+          children: [
+            ImageIcon(AssetImage(iconImage)),
+            Text(
+              ' $title',
+              style: TextStyle(
+                color: Colors.grey[700],
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
-        TableCell(
-          child: Text(
-            filteredValue.join(', '),
-            style: const TextStyle(fontSize: 17),
-          ),
+      ),
+      Divider(color: Colors.lightGreen[900]),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(30, 0, 10, 20),
+        child: Table(
+          columnWidths: const <int, TableColumnWidth>{
+            0: FlexColumnWidth(2),
+            1: FlexColumnWidth(1),
+          },
+          children: children,
         ),
-      ],
-    );
+      ),
+    ],
+  );
+}
+
+TableRow? _buildTableRow(
+    {required String label, required List<String?> value}) {
+  final filteredValue = value.where((v) => v != null && v.isNotEmpty).toList();
+  if (filteredValue.isEmpty) {
+    return null; // Omit the table row if all values are empty
   }
+  return TableRow(
+    children: [
+      TableCell(
+        child: Text(label, style: const TextStyle(fontSize: 17)),
+      ),
+      TableCell(
+        child: Text(
+          filteredValue.join(', '),
+          style: const TextStyle(fontSize: 17),
+        ),
+      ),
+    ],
+  );
+}
 
 void _launchURL(Uri url) async {
   if (!await launchUrl(url)) {
     throw Exception('Could not launch $url');
   }
 }
+
+}
+
