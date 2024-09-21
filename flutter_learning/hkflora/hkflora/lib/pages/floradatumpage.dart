@@ -501,8 +501,7 @@ class _PlantDataPageState extends State<PlantDataPage> {
                                 break;
                               case 'item':
                                 int mathedIndex = keyToIndex[ValueKey(tableItem.reference!.refValue)] as int;
-                                
-                                _scrollToItem(mathedIndex);
+                                /* _scrollToItem(mathedIndex); */
                                 break;
                             }
                           }
