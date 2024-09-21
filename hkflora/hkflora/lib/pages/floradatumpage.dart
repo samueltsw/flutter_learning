@@ -8,8 +8,9 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:hkflora/theme.dart';
 import 'package:flutter/rendering.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
-class PlantDataPage extends StatelessWidget {
+class PlantDataPage extends StatefulWidget {
   final TaxonomicUnit taxonomicUnit;
   final List<GenusData> genusDataList;
   final List<SpeciesData> speciesDataList;
@@ -22,40 +23,59 @@ class PlantDataPage extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<PlantDataPage> createState() => _PlantDataPageState();
+}
+
+class _PlantDataPageState extends State<PlantDataPage> {
+  late AutoScrollController _scrollController;
+
+@override
+  void initState() {
+    super.initState();
+    _scrollController = AutoScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: const MaterialTheme(TextTheme()).light(),
-      darkTheme: const MaterialTheme(TextTheme()).dark(),
-      highContrastDarkTheme:
-          const MaterialTheme(TextTheme()).darkHighContrast(),
-      highContrastTheme: const MaterialTheme(TextTheme()).lightHighContrast(),
-      themeMode: ThemeMode.light,
-      home: SelectionArea(
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              _getPageTitle(),
-              style: const TextStyle(fontSize: 20, color: Colors.black),
+        theme: const MaterialTheme(TextTheme()).light(),
+        darkTheme: const MaterialTheme(TextTheme()).dark(),
+        highContrastDarkTheme:
+            const MaterialTheme(TextTheme()).darkHighContrast(),
+        highContrastTheme: const MaterialTheme(TextTheme()).lightHighContrast(),
+        themeMode: ThemeMode.light,
+        home: SelectionArea(
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(
+                _getPageTitle(),
+                style: const TextStyle(fontSize: 20, color: Colors.black),
+              ),
+            ),
+            body: Builder(
+              builder: (context) => ListView(
+                physics: const BouncingScrollPhysics(),
+                children: <Widget>[
+                  _buildHeader(),
+                  _buildExternalLinks(),
+                  _buildInfoSections(),
+                  _buildFloraOfHongKongSection(context),
+                ],
+              ),
             ),
           ),
-          body: ListView(
-            physics: const BouncingScrollPhysics(),
-            children: <Widget>[
-              _buildHeader(),
-              _buildExternalLinks(),
-              _buildInfoSections(),
-              _buildFloraOfHongKongSection(context),
-            ],
-          ),
-        ),
-      ),
-    );
+        ));
   }
 
   String _getPageTitle() {
-    if (taxonomicUnit.data is SpeciesData) return 'Species Information';
-    if (taxonomicUnit.data is GenusData) return 'Genus Information';
-    if (taxonomicUnit.data is FamilyData) return 'Family Information';
+    if (widget.taxonomicUnit.data is SpeciesData) return 'Species Information';
+    if (widget.taxonomicUnit.data is GenusData) return 'Genus Information';
+    if (widget.taxonomicUnit.data is FamilyData) return 'Family Information';
     return 'Plant Information';
   }
 
@@ -94,29 +114,29 @@ class PlantDataPage extends StatelessWidget {
   }
 
   String _getMainTitle() {
-    if (taxonomicUnit.data is SpeciesData)
-      return (taxonomicUnit.data as SpeciesData).scientificName;
-    if (taxonomicUnit.data is GenusData)
-      return (taxonomicUnit.data as GenusData).genusName;
-    if (taxonomicUnit.data is FamilyData)
-      return (taxonomicUnit.data as FamilyData).familyName;
+    if (widget.taxonomicUnit.data is SpeciesData)
+      return (widget.taxonomicUnit.data as SpeciesData).scientificName;
+    if (widget.taxonomicUnit.data is GenusData)
+      return (widget.taxonomicUnit.data as GenusData).genusName;
+    if (widget.taxonomicUnit.data is FamilyData)
+      return (widget.taxonomicUnit.data as FamilyData).familyName;
     return '';
   }
 
   String _getChineseNames() {
-    if (taxonomicUnit.data is SpeciesData) {
-      final species = taxonomicUnit.data as SpeciesData;
+    if (widget.taxonomicUnit.data is SpeciesData) {
+      final species = widget.taxonomicUnit.data as SpeciesData;
       return [species.chineseName1, species.chineseName2, species.chineseName3]
           .where((name) => name != null && name.isNotEmpty)
           .join('、');
     }
-    if (taxonomicUnit.data is GenusData) {
-      return [(taxonomicUnit.data as GenusData).genusChineseName]
+    if (widget.taxonomicUnit.data is GenusData) {
+      return [(widget.taxonomicUnit.data as GenusData).genusChineseName]
           .where((name) => name != null && name.isNotEmpty)
           .join('');
     }
-    if (taxonomicUnit.data is FamilyData) {
-      return [(taxonomicUnit.data as FamilyData).chineseFamilyName]
+    if (widget.taxonomicUnit.data is FamilyData) {
+      return [(widget.taxonomicUnit.data as FamilyData).chineseFamilyName]
           .where((name) => name.isNotEmpty)
           .join('');
     }
@@ -124,16 +144,16 @@ class PlantDataPage extends StatelessWidget {
   }
 
   String _getSubtitle() {
-    if (taxonomicUnit.data is SpeciesData) {
-      final species = taxonomicUnit.data as SpeciesData;
+    if (widget.taxonomicUnit.data is SpeciesData) {
+      final species = widget.taxonomicUnit.data as SpeciesData;
       return '${species.familyNo} ${species.familyName} ${species.chineseFamilyName}';
     }
-    if (taxonomicUnit.data is GenusData) {
-      final genus = taxonomicUnit.data as GenusData;
+    if (widget.taxonomicUnit.data is GenusData) {
+      final genus = widget.taxonomicUnit.data as GenusData;
       return '${genus.familyNo} ${genus.familyName} ${genus.chineseFamilyName}';
     }
-    if (taxonomicUnit.data is FamilyData) {
-      final family = taxonomicUnit.data as FamilyData;
+    if (widget.taxonomicUnit.data is FamilyData) {
+      final family = widget.taxonomicUnit.data as FamilyData;
       return '${family.familyNo} ${family.familyName} ${family.chineseFamilyName}';
     }
     return '';
@@ -142,26 +162,26 @@ class PlantDataPage extends StatelessWidget {
   Widget _buildExternalLinks() {
     // Implement external links based on the type of taxonomicUnit
     String getKeyword() {
-      switch (taxonomicUnit.type) {
+      switch (widget.taxonomicUnit.type) {
         case 'family':
-          return (taxonomicUnit.data as FamilyData).familyName;
+          return (widget.taxonomicUnit.data as FamilyData).familyName;
         case 'genus':
-          return (taxonomicUnit.data as GenusData).genusName;
+          return (widget.taxonomicUnit.data as GenusData).genusName;
         case 'species':
-          return (taxonomicUnit.data as SpeciesData).scientificName;
+          return (widget.taxonomicUnit.data as SpeciesData).scientificName;
         default:
           return '';
       }
     }
 
     String getHKHLink() {
-      switch (taxonomicUnit.type) {
+      switch (widget.taxonomicUnit.type) {
         case 'family':
-          return 'family&oID=${(taxonomicUnit.data as FamilyData).familyId}';
+          return 'family&oID=${(widget.taxonomicUnit.data as FamilyData).familyId}';
         case 'genus':
-          return 'genus&oID=${(taxonomicUnit.data as GenusData).genusId}';
+          return 'genus&oID=${(widget.taxonomicUnit.data as GenusData).genusId}';
         case 'species':
-          return 'species&oID=${(taxonomicUnit.data as SpeciesData).speciesId}';
+          return 'species&oID=${(widget.taxonomicUnit.data as SpeciesData).speciesId}';
         default:
           return '';
       }
@@ -213,7 +233,7 @@ class PlantDataPage extends StatelessWidget {
   }
 
   Widget _buildInfoSections() {
-    if (taxonomicUnit.data is SpeciesData) {
+    if (widget.taxonomicUnit.data is SpeciesData) {
       return Column(
         children: [
           _buildTwoColumnSection(
@@ -243,7 +263,7 @@ class PlantDataPage extends StatelessWidget {
           ),
         ],
       );
-    } else if (taxonomicUnit is GenusData) {
+    } else if (widget.taxonomicUnit is GenusData) {
       return Column(
         children: [
           _buildTwoColumnSection(
@@ -253,7 +273,7 @@ class PlantDataPage extends StatelessWidget {
           ),
         ],
       );
-    } else if (taxonomicUnit is FamilyData) {
+    } else if (widget.taxonomicUnit is FamilyData) {
       return Column(
         children: [
           _buildTwoColumnSection(
@@ -268,7 +288,7 @@ class PlantDataPage extends StatelessWidget {
   }
 
   List<TableRow> _getSpeciesBasicInfo() {
-    final species = taxonomicUnit.data as SpeciesData;
+    final species = widget.taxonomicUnit.data as SpeciesData;
     return [
       _buildTableRow(label: 'Common Name', value: [
         species.commonName1,
@@ -282,14 +302,14 @@ class PlantDataPage extends StatelessWidget {
   }
 
   List<TableRow> _getSpeciesEcologicalInfo() {
-    final species = taxonomicUnit.data as SpeciesData;
+    final species = widget.taxonomicUnit.data as SpeciesData;
     return [
       _buildTableRow(label: 'Native', value: [species.nativeToHk]),
     ].whereType<TableRow>().toList();
   }
 
   List<TableRow> _getSpeciesConservationStatus() {
-    final species = taxonomicUnit.data as SpeciesData;
+    final species = widget.taxonomicUnit.data as SpeciesData;
     return [
       _buildTableRow(label: 'Cap. 96', value: [species.cap96]),
       _buildTableRow(label: 'Cap. 586', value: [species.cap586]),
@@ -302,7 +322,7 @@ class PlantDataPage extends StatelessWidget {
   }
 
   List<TableRow> _getSpeciesFlowerFruitInfo() {
-    final species = taxonomicUnit.data as SpeciesData;
+    final species = widget.taxonomicUnit.data as SpeciesData;
     return [
       _buildTableRow(
           label: 'Flowering Period',
@@ -314,7 +334,7 @@ class PlantDataPage extends StatelessWidget {
   }
 
   List<TableRow> _getSpeciesOtherInfo() {
-    final species = taxonomicUnit.data as SpeciesData;
+    final species = widget.taxonomicUnit.data as SpeciesData;
     return [
       _buildTableRow(
           label: 'Type Specimen Collected in Hong Kong',
@@ -323,7 +343,7 @@ class PlantDataPage extends StatelessWidget {
   }
 
   List<TableRow> _getGenusInfo() {
-    final genus = taxonomicUnit as GenusData;
+    final genus = widget.taxonomicUnit as GenusData;
     return [
       _buildTableRow(label: 'Genus ID', value: [genus.genusId.toString()]),
       _buildTableRow(label: 'Genus Name', value: [genus.genusName]),
@@ -337,7 +357,7 @@ class PlantDataPage extends StatelessWidget {
   }
 
   List<TableRow> _getFamilyInfo() {
-    final family = taxonomicUnit as FamilyData;
+    final family = widget.taxonomicUnit as FamilyData;
     return [
       _buildTableRow(label: 'Family ID', value: [family.familyId.toString()]),
       _buildTableRow(label: 'Family No', value: [family.familyNo]),
@@ -349,12 +369,12 @@ class PlantDataPage extends StatelessWidget {
 
   Widget _buildFloraOfHongKongSection(BuildContext context) {
     FullFlora? _getFloraOfHK() {
-      if (taxonomicUnit.data is SpeciesData)
-        return (taxonomicUnit.data as SpeciesData).floraOfHKContent;
-      if (taxonomicUnit.data is GenusData)
-        return (taxonomicUnit.data as GenusData).floraOfHKContent;
-      if (taxonomicUnit.data is FamilyData)
-        return (taxonomicUnit.data as FamilyData).floraOfHKContent;
+      if (widget.taxonomicUnit.data is SpeciesData)
+        return (widget.taxonomicUnit.data as SpeciesData).floraOfHKContent;
+      if (widget.taxonomicUnit.data is GenusData)
+        return (widget.taxonomicUnit.data as GenusData).floraOfHKContent;
+      if (widget.taxonomicUnit.data is FamilyData)
+        return (widget.taxonomicUnit.data as FamilyData).floraOfHKContent;
       return null;
     }
 
@@ -391,236 +411,245 @@ class PlantDataPage extends StatelessWidget {
   }
 
   Widget _buildFullFloraContent(FullFlora fullFlora, BuildContext context) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: fullFlora.engItems.map((item) {
-      if (item.type == 'paragraph') {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: HtmlWidget(
-            item.content,
-            textStyle: const TextStyle(fontSize: 17),
-          ),
-        );
-      } else if (item.type == 'table') {
-        return _buildFloraTable(item, context); // Pass the context here
-      } else {
-        return Container(); // Handle other types if needed
-      }
-    }).toList(),
-  );
-}
-
-Widget _buildFloraTable(FloraItem item, BuildContext context) {
-  if (item.table == null || item.table!.isEmpty) {
-    return Container();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: fullFlora.engItems.map((item) {
+        if (item.type == 'paragraph') {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: HtmlWidget(
+              item.content,
+              textStyle: const TextStyle(fontSize: 17),
+            ),
+          );
+        } else if (item.type == 'table') {
+          return _buildFloraTable(item, context); // Pass the context here
+        } else {
+          return Container(); // Handle other types if needed
+        }
+      }).toList(),
+    );
   }
-  final ScrollController scrollController = ScrollController();
 
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 10),
-    child: SingleChildScrollView(
-      controller: scrollController,
-      child: Table(
-        columnWidths: const {
-          0: FlexColumnWidth(0.7),
-          1: FlexColumnWidth(3),
-          2: FlexColumnWidth(1),
-        },
-        children: item.table!.asMap().entries.map((entry) {
-          final int index = entry.key;
-          final TableItem tableItem = entry.value;
+  Widget _buildFloraTable(FloraItem item, BuildContext context) {
+    if (item.table == null || item.table!.isEmpty) {
+      return Container();
+    }
 
-          // Extract the part after the last underscore
-          return TableRow(
-            children: [
-              // Column 1: Index part
-              TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: HtmlWidget(
-                    tableItem.index,
-                    textStyle: const TextStyle(fontSize: 17),
-                  ),
-                ),
-              ),
-              // Column 2: Content (HTML)
-              TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: HtmlWidget(
-                    tableItem.content,
-                    textStyle: const TextStyle(fontSize: 17),
-                  ),
-                ),
-              ),
-              // Column 3: Reference value
-              TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      if (tableItem.reference != null) {
-                        switch (tableItem.reference!.refType) {
-                          case 'genus':
-                            _navigateToFloraDataPage(
-                                context, tableItem.reference!);
-                            break;
+    // Sort according to index
+    final sortedTableItems = List<TableItem>.from(item.table!)
+      ..sort(
+          (a, b) => _extractDivId(a.index).compareTo(_extractDivId(b.index)));
 
-                          case 'species':
-                            _navigateToFloraDataPage(
-                                context, tableItem.reference!);
-                            break;
-                          case 'item':
-                            _scrollToItem(scrollController, tableItem.index);
-                            break;
-                        }
-                      }
-                    },
-                    child: Text(
-                      tableItem.reference?.refValue.split('_').last ?? '',
-                      style: const TextStyle(
-                        fontSize: 17,
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline,
+    final Map<ValueKey<String>, int> keyToIndex = {};
+
+    for (int i = 0; i < sortedTableItems.length; i++) {
+      keyToIndex[ValueKey(_extractDivId(sortedTableItems[i].index))] = i;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: SizedBox(
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: sortedTableItems.length,
+          itemBuilder: (context, index) {
+            final tableItem = sortedTableItems[index];
+            return AutoScrollTag(
+              key: ValueKey(index),
+              controller: _scrollController,
+              index: index,
+              child: Row(
+                key: ValueKey(_extractDivId(tableItem.index)),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Column 1: Index part
+                  Expanded(
+                    flex: 7,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: HtmlWidget(
+                        tableItem.index,
+                        textStyle: const TextStyle(fontSize: 17),
                       ),
                     ),
                   ),
+                  // Column 2: Content (HTML)
+                  Expanded(
+                    flex: 30,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: HtmlWidget(
+                        tableItem.content,
+                        textStyle: const TextStyle(fontSize: 17),
+                      ),
+                    ),
+                  ),
+                  // Column 3: Reference value
+                  Expanded(
+                    flex: 12,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          if (tableItem.reference != null) {
+                            switch (tableItem.reference!.refType) {
+                              case 'genus':
+                              case 'species':
+                                _navigateToFloraDataPage(
+                                    context, tableItem.reference!);
+                                break;
+                              case 'item':
+                                int mathedIndex = keyToIndex[ValueKey(tableItem.reference!.refValue)] as int;
+                                /* _scrollToItem(mathedIndex); */
+                                break;
+                            }
+                          }
+                        },
+                        child: HtmlWidget(
+                          tableItem.reference?.content ?? '',
+                          textStyle: const TextStyle(
+                            fontSize: 17,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  void _navigateToFloraDataPage(BuildContext context, Reference reference) {
+    TaxonomicUnit? item;
+
+    if (reference.refType == 'genus') {
+      try {
+        GenusData genusData = widget.genusDataList.firstWhere(
+          (e) => e.genusId == int.parse(reference.refValue),
+        );
+        item = TaxonomicUnit('genus', genusData);
+      } catch (e) {
+        // No matching genus found
+        print('No matching genus found for ID: ${reference.refValue}');
+      }
+    } else if (reference.refType == 'species') {
+      try {
+        SpeciesData speciesData = widget.speciesDataList.firstWhere(
+          (e) => e.speciesId == int.parse(reference.refValue),
+        );
+        item = TaxonomicUnit('species', speciesData);
+      } catch (e) {
+        // No matching species found
+        print('No matching species found for ID: ${reference.refValue}');
+      }
+    } else {
+      print('Unknown reference type: ${reference.refType}');
+    }
+
+    if (item != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PlantDataPage(
+            taxonomicUnit: item!,
+            genusDataList: widget.genusDataList,
+            speciesDataList: widget.speciesDataList,
+          ),
+        ),
+      );
+    } else {
+      // Handle the case where no matching data was found
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text('No data found for the selected item.'),
+            duration: const Duration(seconds: 1)),
+      );
+    }
+  }
+
+  void _scrollToItem(int mathedIndex) async {
+    await _scrollController.scrollToIndex(
+      mathedIndex,
+      preferPosition: AutoScrollPosition.begin,
+    );
+    await _scrollController.highlight(mathedIndex);
+
+  }
+
+  String _extractDivId(String htmlString) {
+    RegExp regExp = RegExp(r'<div id="([^"]+)"');
+    Match? match = regExp.firstMatch(htmlString);
+    return match?.group(1) ?? '';
+  }
+
+  Widget _buildTwoColumnSection(
+      {required String title,
+      required String iconImage,
+      required List<TableRow> children}) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 10, 10, 0),
+          child: Row(
+            children: [
+              ImageIcon(AssetImage(iconImage)),
+              Text(
+                ' $title',
+                style: TextStyle(
+                  color: Colors.grey[700],
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
-          );
-        }).toList(),
-      ),
-    ),
-  );
-}
-
-void _navigateToFloraDataPage(BuildContext context, Reference reference) {
-  // Implement navigation to the relevant FloraDataPage
-  // You'll need to create the appropriate TaxonomicUnit based on the reference type and ID
-  TaxonomicUnit item;
-  if (reference.refType == 'genus') {
-     item = TaxonomicUnit(
-        'genus', 
-        genusDataList.firstWhere((e) => e.genusId == int.parse(reference.refValue)));
-  } else {
-     item =  TaxonomicUnit(
-        'species',
-        speciesDataList.firstWhere((e) => e.speciesId == int.parse(reference.refValue)));
+          ),
+        ),
+        Divider(color: Colors.lightGreen[900]),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(30, 0, 10, 20),
+          child: Table(
+            columnWidths: const <int, TableColumnWidth>{
+              0: FlexColumnWidth(1.8),
+              1: FlexColumnWidth(1),
+            },
+            children: children,
+          ),
+        ),
+      ],
+    );
   }
 
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => PlantDataPage(
-        taxonomicUnit: item,
-        genusDataList: genusDataList,
-        speciesDataList: speciesDataList,
-      ),
-    ),
-  );
-}
-
-void _scrollToItem(ScrollController controller, String targetIndex) {
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    final context = controller.position.context.notificationContext;
-    if (context == null) return;
-
-    final RenderBox? tableBox = context.findRenderObject() as RenderBox?;
-    if (tableBox == null) return;
-
-    final RenderAbstractViewport viewport = RenderAbstractViewport.of(tableBox);
-    if (viewport == null) return;
-
-    final List<TableRow> tableRows = (context.widget as Table).children;
-    
-    for (int i = 0; i < tableRows.length; i++) {
-      final TableRow row = tableRows[i];
-      final TableCell firstCell = row.children.first as TableCell;
-      final String cellText = (firstCell.child as Text).data ?? '';
-      
-      if (cellText == targetIndex) {
-        final RenderObject? rowRenderObject = context.findRenderObject();
-        if (rowRenderObject != null) {
-          final RenderAbstractViewport viewport = RenderAbstractViewport.of(rowRenderObject)!;
-          final RevealedOffset targetOffset = viewport.getOffsetToReveal(rowRenderObject, 0.0);
-          
-          controller.animateTo(
-            targetOffset.offset,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
-        }
-        break;
-      }
+  TableRow? _buildTableRow(
+      {required String label, required List<String?> value}) {
+    final filteredValue =
+        value.where((v) => v != null && v.isNotEmpty).toList();
+    if (filteredValue.isEmpty) {
+      return null; // Omit the table row if all values are empty
     }
-  });
-}
-
-Widget _buildTwoColumnSection(
-    {required String title,
-    required String iconImage,
-    required List<TableRow> children}) {
-  return Column(
-    children: [
-      Padding(
-        padding: const EdgeInsets.fromLTRB(20, 10, 10, 0),
-        child: Row(
-          children: [
-            ImageIcon(AssetImage(iconImage)),
-            Text(
-              ' $title',
-              style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+    return TableRow(
+      children: [
+        TableCell(
+          child: Text(label, style: const TextStyle(fontSize: 17)),
         ),
-      ),
-      Divider(color: Colors.lightGreen[900]),
-      Padding(
-        padding: const EdgeInsets.fromLTRB(30, 0, 10, 20),
-        child: Table(
-          columnWidths: const <int, TableColumnWidth>{
-            0: FlexColumnWidth(2),
-            1: FlexColumnWidth(1),
-          },
-          children: children,
+        TableCell(
+          child: Text(
+            filteredValue.join(', '),
+            style: const TextStyle(fontSize: 17),
+          ),
         ),
-      ),
-    ],
-  );
-}
-
-TableRow? _buildTableRow(
-    {required String label, required List<String?> value}) {
-  final filteredValue = value.where((v) => v != null && v.isNotEmpty).toList();
-  if (filteredValue.isEmpty) {
-    return null; // Omit the table row if all values are empty
+      ],
+    );
   }
-  return TableRow(
-    children: [
-      TableCell(
-        child: Text(label, style: const TextStyle(fontSize: 17)),
-      ),
-      TableCell(
-        child: Text(
-          filteredValue.join(', '),
-          style: const TextStyle(fontSize: 17),
-        ),
-      ),
-    ],
-  );
-}
 
-void _launchURL(Uri url) async {
-  if (!await launchUrl(url)) {
-    throw Exception('Could not launch $url');
+  void _launchURL(Uri url) async {
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
   }
 }
-
-}
-

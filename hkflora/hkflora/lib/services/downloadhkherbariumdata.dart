@@ -86,14 +86,14 @@ Future<(List<int>, List<int>, List<int>)> fetchSid(
 
   final client = RetryClient(http.Client());
   try {
-      for (int i = 0; i < 50; i++){
+/*       for (int i = 0; i < 50; i++){
         final httpPackageUrl = Uri.https(
       'www.herbarium.gov.hk',
       '/plantdb/GetSpeciesList.php',
-      {'quick_search':scientificNameList[i]});
-/*     for (String scientificName in scientificNameList) {
+      {'quick_search':scientificNameList[i]}); */
+    for (String scientificName in scientificNameList) {
       final httpPackageUrl = Uri.https('www.herbarium.gov.hk',
-          '/plantdb/GetSpeciesList.php', {'quick_search': scientificName}); */
+          '/plantdb/GetSpeciesList.php', {'quick_search': scientificName});
 
       final httpPackageResponse = await client.get(httpPackageUrl);
       final progress = noRequest / scientificNameList.length;
