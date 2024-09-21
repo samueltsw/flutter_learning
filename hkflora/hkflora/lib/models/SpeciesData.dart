@@ -1,6 +1,8 @@
-class OnlineFloraData {
+import 'package:hkflora/models/FullFloraData.dart';
+
+class SpeciesData {
   
-  OnlineFloraData({
+  SpeciesData({
     required this.speciesId,
     required this.familyId,
     required this.familyNo,
@@ -58,9 +60,9 @@ class OnlineFloraData {
   final int? flowerToValue;
   final int? fruitFromValue;
   final int? fruitToValue;
-  final String? floraOfHKContent;
+  final FullFlora? floraOfHKContent;
 
-  factory OnlineFloraData.readFromStoredJson(Map<String, dynamic> data){
+  factory SpeciesData.readFromStoredJson(Map<String, dynamic> data){
         final speciesId =  data['speciesId'];
         final familyId =  data['familyId'];
         final familyNo = data['familyNo'];
@@ -88,9 +90,9 @@ class OnlineFloraData {
         final flowerToValue = data['flowerToValue'];
         final fruitFromValue = data['fruitFromValue'];
         final fruitToValue = data['fruitToValue'];
-        final floraOfHKContent = data['floraOfHKContent'];
+        final floraOfHKContent =  (data['floraOfHKContent']!= null) ? FullFlora.readFromStoredJson(data['floraOfHKContent']) : null;
      
-      return OnlineFloraData(
+      return SpeciesData(
         speciesId: speciesId,
         familyId: familyId,
         familyNo: familyNo,
@@ -122,7 +124,7 @@ class OnlineFloraData {
 
   }
   
-  factory OnlineFloraData.fromJson(Map<String, dynamic> data, Map<String, dynamic> floradata) {
+  factory SpeciesData.fromJson(Map<String, dynamic> data, Map<String, dynamic> floradata) {
     final speciesId = int.parse(data['id']);
     final familyId = int.parse(data['family_id']);
     final familyNo = data['family_no'];
@@ -163,10 +165,10 @@ class OnlineFloraData {
         (data['fruit_period'].isNotEmpty) ? data['fruit_period'][0]['from_value'] : null;
     final fruitToValue =
         (data['fruit_period'].isNotEmpty) ? data['fruit_period'][0]['to_value'] : null;
-    final floraOfHKContent = 
-        (floradata['eng'].isNotEmpty) ? floradata['eng'][0]['content'] : null;
+    final floraOfHKContent =
+        (floradata['eng'].isNotEmpty) ? (FullFlora.fromJson(floradata)): null;
 
-      return OnlineFloraData(
+      return SpeciesData(
         speciesId: speciesId,
         familyId: familyId,
         familyNo: familyNo,
@@ -227,4 +229,3 @@ class OnlineFloraData {
         'fruitToValue': fruitToValue,
         'floraOfHKContent': floraOfHKContent};  
 }
-
